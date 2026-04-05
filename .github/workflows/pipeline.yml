@@ -1,31 +1,37 @@
-name: Data Pipeline
+name: Weekly AI Tool Scraper
 
 on:
   schedule:
-    - cron: "*/10 * * * *"   # every 10 minutes (testing)
-  workflow_dispatch:
+    # 03:30 UTC is 09:00 AM IST. 
+    # The '0' at the end stands for Sunday.
+    - cron: "30 3 * * 0"
+  workflow_dispatch: # Allows you to still run it manually for testing
 
 jobs:
   run-script:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
 
-      - name: Install Libraries
+      - name: Install Dependencies
         run: pip install pandas feedparser
 
-      - name: Run Script
+      - name: Run Scraper
         run: python script.py
 
-      - name: Commit CSV
+      - name: Commit and Push CSV
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "actions@github.com"
           git add output.csv
-          git commit -m "Auto update CSV" || echo "No changes"
+          git commit -m "Weekly Sunday Update: AI Tools" || echo "No changes to commit"
           git push
