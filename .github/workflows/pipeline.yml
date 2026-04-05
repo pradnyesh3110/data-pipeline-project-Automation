@@ -4,7 +4,7 @@ on:
   schedule:
     # 03:30 UTC is 09:00 AM IST. 
     # The '0' at the end stands for Sunday.
-    - cron: "30 3 * * 0"
+    - cron: "00 12 * * 0"
   workflow_dispatch: # Allows you to still run it manually for testing
 
 jobs:
