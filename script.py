@@ -35,6 +35,8 @@ def send_email():
     with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
         smtp.login(EMAIL_USER, EMAIL_PASS)
         smtp.send_message(msg)
+    print("EMAIL_USER:", EMAIL_USER)
+    print("EMAIL_PASS exists:", EMAIL_PASS is not None)
 
     print("Email sent successfully!")
 
