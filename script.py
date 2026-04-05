@@ -1,7 +1,7 @@
 import os
-EMAIL_USER = os.getenv("Pradnyeshrisbud1@gmail.com")
-EMAIL_PASS = os.getenv("aqbr yjpk zkby efzv")
-EMAIL_TO = os.getenv("Pradnyeshrisbud1@gmail.com")
+EMAIL_USER = os.getenv("EMAIL_USER")
+EMAIL_PASS = os.getenv("EMAIL_PASS")
+EMAIL_TO = os.getenv("EMAIL_TO")
 import feedparser
 import pandas as pd
 import os
