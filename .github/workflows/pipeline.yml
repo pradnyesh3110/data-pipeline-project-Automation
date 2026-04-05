@@ -2,16 +2,19 @@ name: Weekly AI Tool Scraper
 
 on:
   schedule:
-    # 03:30 UTC is 09:00 AM IST. 
-    # The '0' at the end stands for Sunday.
-    - cron: "00 12 * * 0"
-  workflow_dispatch: # Allows you to still run it manually for testing
+    # Runs at 03:30 UTC every Sunday (9:00 AM IST)
+    - cron: "30 3 * * 0"
+  workflow_dispatch: # Allows you to trigger it manually for testing
+
+env:
+  # This stops the Node.js 20 deprecation warning
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   run-script:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: write # This is CRITICAL to allow the bot to push the CSV
 
     steps:
       - name: Checkout Code
@@ -26,12 +29,14 @@ jobs:
         run: pip install pandas feedparser
 
       - name: Run Scraper
+        # This executes your updated script.py
         run: python script.py
 
       - name: Commit and Push CSV
         run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "actions@github.com"
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add output.csv
-          git commit -m "Weekly Sunday Update: AI Tools" || echo "No changes to commit"
+          # If no new tools are found, it won't crash the pipeline
+          git commit -m "Sunday Update: AI Tools" || echo "No new tools found today"
           git push
