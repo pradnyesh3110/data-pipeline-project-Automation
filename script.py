@@ -19,26 +19,32 @@ SOURCES = {
 
 # ✅ Email Function
 def send_email():
-    if not os.path.exists("output.csv"):
-        print("CSV not found, skipping email.")
-        return
+    try:
+        if not os.path.exists("output.csv"):
+            print("CSV not found, skipping email.")
+            return
 
-    msg = EmailMessage()
-    msg['Subject'] = 'Weekly AI Tools Report'
-    msg['From'] = EMAIL_USER
-    msg['To'] = EMAIL_TO
-    msg.set_content('Attached is your weekly AI tools report.')
+        if not EMAIL_USER or not EMAIL_PASS:
+            print("Email credentials missing, skipping email.")
+            return
 
-    with open('output.csv', 'rb') as f:
-        msg.add_attachment(f.read(), maintype='application', subtype='csv', filename='output.csv')
+        msg = EmailMessage()
+        msg['Subject'] = 'Weekly AI Tools Report'
+        msg['From'] = EMAIL_USER
+        msg['To'] = EMAIL_TO
+        msg.set_content('Attached is your weekly AI tools report.')
 
-    with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
-        smtp.login(EMAIL_USER, EMAIL_PASS)
-        smtp.send_message(msg)
-    print("EMAIL_USER:", EMAIL_USER)
-    print("EMAIL_PASS exists:", EMAIL_PASS is not None)
+        with open('output.csv', 'rb') as f:
+            msg.add_attachment(f.read(), maintype='application', subtype='csv', filename='output.csv')
 
-    print("Email sent successfully!")
+        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+            smtp.login(EMAIL_USER, EMAIL_PASS)
+            smtp.send_message(msg)
+
+        print("Email sent successfully!")
+
+    except Exception as e:
+        print("Email error:", str(e))
 
 # ✅ Scraper Function
 def fetch_tools():
